@@ -167,7 +167,7 @@ import { Jumper } from 'svelte-loading-spinners';
             {#if loading}
                 <div class = "spinner">
                     <Jumper size="100" color="#35AEE2" unit="px" duration="1s"></Jumper>
-                    <p class='footer-text'>Please Wait...</p>
+                    <p class='loading-text'>Please Wait...</p>
                 </div>
             {:else}
                 {#if count}
@@ -180,7 +180,7 @@ import { Jumper } from 'svelte-loading-spinners';
 
         <div class='stars-holder'>
             {#if allStars}
-                {#each allStars as star}
+                {#each allStars.reverse() as star}
                     <div class='star-container'>
                         <div class='data-holder'>
                             <div class='message'>{star.message}</div>
@@ -281,5 +281,11 @@ import { Jumper } from 'svelte-loading-spinners';
 
     .data-holder {
         width: 100%;
+    }
+
+    .spinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 </style>
