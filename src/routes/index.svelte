@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 import contractABI from '$lib/utils/StarNet.json';
 
     let currentAccount;
-    let contractAddress = '0x9a70FBfDb4297e5e4f326adBa7D5D95FF5C02DFe';
+    let contractAddress = '0xe85749ac33738fD1E7430763731270B74b17b52A';
     let count;
 
     async function checkIfWalletIsConnected() {
