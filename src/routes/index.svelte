@@ -157,8 +157,8 @@ import { Jumper } from 'svelte-loading-spinners';
                 </button>
             {:else}
                 <input class='input' type="text" bind:value={messageText}>
-                <button class="starButton" on:click={sendStar} disabled={!(messageText.length > 0)}>
-                    ⭐ Star
+                <button class="starButton" class:cupo={(messageText.length > 0)} on:click={sendStar} disabled={!(messageText.length > 0)}>
+                    Send ⭐Star
                 </button>
             {/if}
         </div>
@@ -228,6 +228,9 @@ import { Jumper } from 'svelte-loading-spinners';
         height: 3rem;
         font-size: 1.5rem;
         color: black;
+    }
+
+    .cupo {
         cursor: pointer;
     }
 
@@ -239,7 +242,7 @@ import { Jumper } from 'svelte-loading-spinners';
     }
 
     .star-container { 
-        background-color: oldlace;
+        background-color: lightgreen;
         margin-top: 0.25rem;
         padding: 1rem;
 
@@ -247,6 +250,7 @@ import { Jumper } from 'svelte-loading-spinners';
         text-align: left;
 
         width: 100%;
+        border-radius: 9px;
     }
 
     .input {
