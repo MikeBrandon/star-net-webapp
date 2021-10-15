@@ -2,6 +2,7 @@
 import { onMount } from "svelte";
 import { ethers } from "ethers";
 import contractABI from '$lib/utils/StarNet.json';
+import { Jumper } from 'svelte-loading-spinners';
 
     let currentAccount;
     let contractAddress = '0xe85749ac33738fD1E7430763731270B74b17b52A';

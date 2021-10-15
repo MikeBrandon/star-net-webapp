@@ -27,6 +27,7 @@
   },
   "type": "module",
   "dependencies": {
-    "ethers": "^5.4.7"
+    "ethers": "^5.4.7",
+    "svelte-loading-spinners": "^0.1.7"
   }
 }
