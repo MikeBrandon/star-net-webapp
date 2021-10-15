@@ -129,7 +129,7 @@ import contractABI from '$lib/utils/StarNet.json';
         <div>
             {#if count}
                 <p>
-                    I have {count} stars!
+                    I have {count} ⭐{count == 1 ? 'star!' : 'stars!'}
                 </p>
             {/if}
         </div>
@@ -139,15 +139,39 @@ import contractABI from '$lib/utils/StarNet.json';
 
 <style>
     main {
+        background-color: #0d1116;
+
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         text-align: center;
         height: 100vh;
+
+        font-size: 2rem;
+        font-family: -apple-system, Inter, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+		'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+		sans-serif;
+        font-weight: bold;
     }
 
-    main > div {
-        margin-bottom: 10rem;
+    main > div > div {
+        color: white;
+        margin-bottom: 1rem;
+    }
+
+    button {
+        width: 100%;
+        height: 3rem;
+        font-size: 1.5rem;
+        color: black;
+        cursor: pointer;
+    }
+
+    p {
+        background: -webkit-linear-gradient(left, #60c657 30%, #35aee2 60%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
 </style>
