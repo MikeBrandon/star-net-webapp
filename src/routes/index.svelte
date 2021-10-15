@@ -114,24 +114,40 @@ import contractABI from '$lib/utils/StarNet.json';
         I am Mike. Would you like to drop me a ⭐Star.
         </div>
 
-        <button class="waveButton" on:click={sendStar}>
-            ⭐ Star
-        </button>
+        <div>
+            {#if !currentAccount}
+                <button class="starButton" on:click={connectWallet}>
+                    Connect Wallet
+                </button>
+            {:else}
+                <button class="starButton" on:click={sendStar}>
+                    ⭐ Star
+                </button>
+            {/if}
+        </div>
 
-        {#if count}
-            <p>
-                I have {count} stars!
-            </p>
-        {/if}
+        <div>
+            {#if count}
+                <p>
+                    I have {count} stars!
+                </p>
+            {/if}
+        </div>
+
     </div>
-
-    {#if !currentAccount}
-        <button class="waveButton" on:click={connectWallet}>
-            Connect Wallet
-        </button>
-    {/if}
 </main>
 
 <style>
+    main {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        height: 100vh;
+    }
 
+    main > div {
+        margin-bottom: 10rem;
+    }
 </style>
