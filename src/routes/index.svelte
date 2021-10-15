@@ -60,10 +60,37 @@ import contractABI from '$lib/utils/StarNet.json';
                 const starSmartContract = new ethers.Contract(contractAddress, contractABI.abi, signer);
 
                 count = await starSmartContract.getTotalStars();
-                console.log('Total wave count... ', count.toNumber());
+                console.log('Total star count... ', count.toNumber());
 
             } else {
                 console.log("Ethereum object doesn't exist!");
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function sendStar() {
+        try {
+            
+            const { ethereum } = window;
+
+            if (ethereum) {
+                const provider = new ethers.providers.Web3Provider(ethereum);
+                const signer = provider.getSigner();
+                const starSmartContract = new ethers.Contract(contractAddress, contractABI.abi, signer);
+
+                const starTxn = await starSmartContract.sendStar();
+                console.log('Mining...', starTxn.hash);
+
+                await starTxn.wait();
+                console.log('Mined --', starTxn.hash);
+
+                count = await starSmartContract.getTotalStars();
+                console.log("Retrieved total star count...", count.toNumber());
+
+                alert('Wow! Thanks for the Star.');
             }
 
         } catch (error) {
@@ -87,7 +114,7 @@ import contractABI from '$lib/utils/StarNet.json';
         I am Mike. Would you like to drop me a ⭐Star.
         </div>
 
-        <button class="waveButton" on:click={null}>
+        <button class="waveButton" on:click={sendStar}>
             ⭐ Star
         </button>
 
