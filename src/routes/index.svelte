@@ -1,12 +1,14 @@
 <script lang="ts">
 import { onMount } from "svelte";
-import { ethers, ethers } from "ethers";
+import { ethers } from "ethers";
 import contractABI from '$lib/utils/StarNet.json';
 
     let currentAccount;
     let contractAddress = '0xe85749ac33738fD1E7430763731270B74b17b52A';
     let count;
     let allStars;
+    let messageText = '';
+    let loading = false;
 
     async function getAllStars() {
         try {
@@ -98,21 +100,38 @@ import contractABI from '$lib/utils/StarNet.json';
                 const signer = provider.getSigner();
                 const starSmartContract = new ethers.Contract(contractAddress, contractABI.abi, signer);
 
-                const starTxn = await starSmartContract.sendStar();
+                const starTxn = await starSmartContract.sendStar(messageText);
                 console.log('Mining...', starTxn.hash);
 
+                loading = true;
                 await starTxn.wait();
                 console.log('Mined --', starTxn.hash);
 
                 count = await starSmartContract.getTotalStars();
                 console.log("Retrieved total star count...", count.toNumber());
+                loading = true;
 
-                alert('Wow! Thanks for the Star.');
             }
 
         } catch (error) {
             console.log(error);
         }
+    }
+
+    function getShortDate(date: Date) {
+        const _date = date.getDate().toString().padStart(2, "0");
+        const _month = (date.getMonth() + 1).toString().padStart(2, "0");
+        const _year = date.getFullYear();
+
+        const dateString = `${_date}/${_month}/${_year}`;
+
+        const _hour = date.getHours().toString().padStart(2, "0");
+        const _minute = date.getMinutes().toString().padStart(2, "0");
+        const _seconds = date.getSeconds().toString().padStart(2, "0");
+
+        const timeString = `${_hour}:${_minute}:${_seconds}`;
+
+        return `${dateString} ${timeString}`;
     }
 
     onMount(() => {
@@ -136,17 +155,43 @@ import contractABI from '$lib/utils/StarNet.json';
                     Connect Wallet
                 </button>
             {:else}
-                <button class="starButton" on:click={sendStar}>
+                <input class='input' type="text" bind:value={messageText}>
+                <button class="starButton" on:click={sendStar} disabled={!(messageText.length > 0)}>
                     ⭐ Star
                 </button>
             {/if}
         </div>
 
         <div>
-            {#if count}
-                <p>
-                    I have {count} ⭐{count == 1 ? 'star!' : 'stars!'}
-                </p>
+            {#if loading}
+                <div class = "spinner">
+                    <Jumper size="100" color="#35AEE2" unit="px" duration="1s"></Jumper>
+                    <p class='footer-text'>Please Wait...</p>
+                </div>
+            {:else}
+                {#if count}
+                    <p>
+                        I have {count} ⭐{count == 1 ? 'star!' : 'stars!'}
+                    </p>
+                {/if}
+            {/if}
+        </div>
+
+        <div class='stars-holder'>
+            {#if allStars}
+                {#each allStars as star}
+                    <div class='star-container'>
+                        <div class='data-holder'>
+                            <div class='message'>{star.message}</div>
+                            <div class='small-text'>
+                                <div class='address'>
+                                    👤<a href="https://rinkeby.etherscan.io/address/{star.address}">{star.address}</a>
+                                </div>
+                                <div class='time'>🕒{getShortDate(star.timestamp)}</div>
+                            </div>
+                        </div>
+                    </div>
+                {/each}
             {/if}
         </div>
 
@@ -157,14 +202,15 @@ import contractABI from '$lib/utils/StarNet.json';
     main {
         background-color: #0d1116;
 
+        padding-top: 10rem;
+
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
         text-align: center;
         height: 100vh;
 
-        font-size: 2rem;
+        font-size: 1.5rem;
         font-family: -apple-system, Inter, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
 		'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
 		sans-serif;
@@ -173,11 +219,11 @@ import contractABI from '$lib/utils/StarNet.json';
 
     main > div > div {
         color: white;
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
     }
 
     button {
-        width: 100%;
+        width: 75%;
         height: 3rem;
         font-size: 1.5rem;
         color: black;
@@ -189,5 +235,50 @@ import contractABI from '$lib/utils/StarNet.json';
         background-clip: text;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+    }
+
+    .star-container { 
+        background-color: oldlace;
+        margin-top: 0.25rem;
+        padding: 1rem;
+
+        color: black;
+        text-align: left;
+
+        width: 100%;
+    }
+
+    .input {
+        background-color: transparent;
+        font-size: 1.5rem;
+        color: white;
+        border: 1px solid white;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+        border-radius: 6px;
+    }
+
+    .num {
+        margin-right: 1rem;
+    }
+
+    .small-text {
+        display: flex;
+        font-size: 0.9rem;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .message {
+        font-size: 1.2rem;
+    }
+
+    .stars-holder{
+        width: 50vw;
+    }
+
+    .data-holder {
+        width: 100%;
     }
 </style>
