@@ -147,7 +147,7 @@ import { Jumper } from 'svelte-loading-spinners';
         </div>
 
         <div class="bio">
-        I am Mike. Would you like to drop me a ⭐Star.
+            Leave a message to drop a ⭐Star.
         </div>
 
         <div>
@@ -183,7 +183,7 @@ import { Jumper } from 'svelte-loading-spinners';
                 {#each allStars.reverse() as star}
                     <div class='star-container'>
                         <div class='data-holder'>
-                            <div class='message'>{star.message}</div>
+                            <div class='message'>⭐{star.message}</div>
                             <div class='small-text'>
                                 <div class='address'>
                                     👤<a href="https://rinkeby.etherscan.io/address/{star.address}">{star.address}</a>
@@ -291,5 +291,9 @@ import { Jumper } from 'svelte-loading-spinners';
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    .time {
+        text-align: right;
     }
 </style>
