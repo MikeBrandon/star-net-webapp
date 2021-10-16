@@ -294,7 +294,7 @@ import confetti from 'canvas-confetti';
         flex-direction: column;
         align-items: center;
         text-align: center;
-        height: 100vh;
+        height: 80vh;
 
         font-size: 1.5rem;
         font-family: -apple-system, Inter, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
@@ -366,7 +366,7 @@ import confetti from 'canvas-confetti';
     }
 
     .stars-holder{
-        width: 40vw;
+        width: 45vw;
     }
 
     .data-holder {
