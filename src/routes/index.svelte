@@ -3,13 +3,37 @@ import { onMount } from "svelte";
 import { ethers } from "ethers";
 import contractABI from '$lib/utils/StarNet.json';
 import { Jumper } from 'svelte-loading-spinners';
+import confetti from 'canvas-confetti';
 
     let currentAccount;
     let contractAddress = '0x4C92BEBfa0b92d2B6B3EEEB5d6743839F10CF3Cc';
     let count;
     let allStars;
     let messageText = '';
-    let loading = false;
+    let loading, isWinner = false;
+    
+    var colors = ["#60c657", "#35aee2"];
+
+    function castConfetti() {
+        confetti({
+            particleCount: 2,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 },
+            colors: colors,
+        });
+        confetti({
+            particleCount: 2,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 },
+            colors: colors,
+        });
+
+        if (Date.now() < Date.now() + 15000) {
+            requestAnimationFrame(castConfetti);
+        }
+    }
 
     async function getAllStars() {
         try {
@@ -77,7 +101,12 @@ import { Jumper } from 'svelte-loading-spinners';
                 })
 
                 starSmartContract.on('NewWinner', (address) => {
-                    console.log(address);
+                    if (signer.getAddress() == address) {
+                        isWinner = true;
+                        castConfetti()
+                    } else {
+                        alert(`${address} just Won 0.0001ETH!!! Check Your Wallet.`);
+                    }
                 })
             }
 
@@ -184,9 +213,18 @@ import { Jumper } from 'svelte-loading-spinners';
 
 <main class="mainContainer">
     <div class="dataContainer">
-        <div class="header">
-        👋 Hey there!
-        </div>
+        {#if !isWinner}
+            <div class="header">
+                👋 Hey there!
+            </div>
+        {:else}
+            <div class="large-trophy">
+                🏆
+            </div>
+            <div class="header">
+                YOU ARE A WINNER!!!
+            </div>
+        {/if}
 
         <div class="bio">
             Leave a message to drop a ⭐Star for a chance to win 0.0001 ETH.
@@ -361,5 +399,9 @@ import { Jumper } from 'svelte-loading-spinners';
         flex-direction: column;
         justify-content: center;
         align-items: center;
+    }
+
+    .large-trophy {
+        font-size: 10rem;
     }
 </style>
