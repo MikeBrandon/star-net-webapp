@@ -180,7 +180,7 @@ import confetti from 'canvas-confetti';
                 const signer = provider.getSigner();
                 const starSmartContract = new ethers.Contract(contractAddress, contractABI.abi, signer);
 
-                const starTxn = await starSmartContract.sendStar(messageText);
+                const starTxn = await starSmartContract.sendStar(messageText, { gasLimit: 300000 });
                 console.log('Mining...', starTxn.hash);
 
                 loading = true;
