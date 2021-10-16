@@ -268,7 +268,7 @@ import confetti from 'canvas-confetti';
                             </div>
                         {/if}
                         <div class='data-holder'>
-                            <div class='message'>⭐{star.message}</div>
+                            <div class='message'>⭐ {star.message}</div>
                             <div class='small-text'>
                                 <div class='address'>
                                     👤<a href="https://rinkeby.etherscan.io/address/{star.address}">{star.address}</a>
@@ -349,10 +349,6 @@ import confetti from 'canvas-confetti';
         border-radius: 6px;
     }
 
-    .num {
-        margin-right: 1rem;
-    }
-
     .small-text {
         display: flex;
         font-size: 0.9rem;
@@ -403,5 +399,79 @@ import confetti from 'canvas-confetti';
 
     .large-trophy {
         font-size: 10rem;
+    }
+
+    @media only screen and (max-width: 640px) {
+        main {
+            padding-top: 3rem;
+            height: 100vh;
+            width: 90vw;
+            font-size: 1rem;
+            padding: 0.5rem;
+        }
+
+        button {
+            width: 50%;
+            height: 2rem;
+            font-size: 1rem;
+        }
+
+        .star-container {
+            padding: 0.5rem;
+            border-radius: 6px;
+        }
+
+        .input {
+            font-size: 1rem;
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .small-text {
+            flex-direction: column;
+            font-size: 0.5rem;
+            width: 100%;
+        }
+
+        .message {
+            font-size: 0.75rem;
+            font-weight: normal;
+        }
+
+        /* LOL */
+
+        .stars-holder{
+            width: 80%;
+        }
+
+        .data-holder {
+            width: 100%;
+        }
+
+        .time {
+            text-align: left;
+            margin-top: 0.25em;
+        }
+
+        .won {
+            background-color: goldenrod;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .trophy {
+            transform: translateX(-2.5px)
+        }
+
+        .dataContainer {
+            margin-top: 3em;
+        }
+
+        .large-trophy {
+            font-size: 5rem;
+        }
+
     }
 </style>
