@@ -238,7 +238,7 @@ import confetti from 'canvas-confetti';
                 👋 Hey there!
             </div>
             {#if someoneJustWon[0]}
-                <div class="small-text white">
+                <div class="white">
                     {someoneJustWon[1]} just Won 0.0001ETH!
                 </div>
             {/if}
@@ -446,6 +446,13 @@ import confetti from 'canvas-confetti';
         font-size: 10rem;
     }
 
+    .white {
+        color: white;
+        text-align: center;
+        width: 100%;
+        font-size: 0.9rem;
+    }
+
     @media only screen and (max-width: 640px) {
         main {
             padding-top: 3rem;
@@ -518,12 +525,5 @@ import confetti from 'canvas-confetti';
         .large-trophy {
             font-size: 5rem;
         }
-
-        .white {
-            color: white;
-            text-align: center;
-            width: 100%;
-        }
-
     }
 </style>
