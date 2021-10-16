@@ -11,6 +11,8 @@ import confetti from 'canvas-confetti';
     let allStars;
     let messageText = '';
     let loading, isWinner = false;
+    let someoneJustWon = [false, null];
+    let safeTime = 0;
     
     var colors = ["#60c657", "#35aee2"];
 
@@ -44,6 +46,12 @@ import confetti from 'canvas-confetti';
                 const provider = new ethers.providers.Web3Provider(ethereum);
                 const signer = await provider.getSigner();
                 const starSmartContract = new ethers.Contract(contractAddress, contractABI.abi, signer);
+
+                const lastStarred = await starSmartContract.getLastStar();
+                const lastStar = new Date(lastStarred * 1000);
+                safeTime = new Date(lastStar.getTime() + 15*60000);
+
+                console.log('Last Star: ', lastStar);
 
                 count = await starSmartContract.getTotalStars();
                 console.log('Total star count... ', count.toNumber());
@@ -103,9 +111,9 @@ import confetti from 'canvas-confetti';
                 starSmartContract.on('NewWinner', (address) => {
                     if (signer.getAddress() == address) {
                         isWinner = true;
-                        castConfetti()
+                        castConfetti();
                     } else {
-                        alert(`${address} just Won 0.0001ETH!!! Check Your Wallet.`);
+                        someoneJustWon = [true, address];
                     }
                 })
             }
@@ -206,6 +214,12 @@ import confetti from 'canvas-confetti';
         return `${dateString} ${timeString}`;
     }
 
+    function millisToMinutesAndSeconds(millis) {
+        var minutes = Math.floor(millis / 60000);
+        var seconds = ((millis % 60000) / 1000).toFixed(0);
+        return minutes + "min " + (seconds < 10 ? '0' : '') + seconds + 'sec';
+    }
+
     onMount(() => {
         checkIfWalletIsConnected();
     })
@@ -217,6 +231,11 @@ import confetti from 'canvas-confetti';
             <div class="header">
                 👋 Hey there!
             </div>
+            {#if someoneJustWon[0]}
+                <div class="small-text white">
+                    {someoneJustWon[1]} just Won 0.0001ETH!
+                </div>
+            {/if}
         {:else}
             <div class="large-trophy">
                 🏆
@@ -236,10 +255,16 @@ import confetti from 'canvas-confetti';
                     Connect Wallet
                 </button>
             {:else}
-                <input class='input' type="text" bind:value={messageText}>
-                <button class="starButton" class:cupo={(messageText.length > 0)} on:click={sendStar} disabled={!(messageText.length > 0)}>
-                    Send ⭐Star
-                </button>
+                {#if safeTime < new Date()}
+                    <input class='input' type="text" bind:value={messageText}>
+                    <button class="starButton" class:cupo={(messageText.length > 0)} on:click={sendStar} disabled={!(messageText.length > 0)}>
+                        Send ⭐Star
+                    </button>
+                {:else}
+                    <div>
+                        You Still have to wait for {millisToMinutesAndSeconds(safeTime.getTime() - new Date().getTime())}.
+                    </div>
+                {/if}
             {/if}
         </div>
 
@@ -261,8 +286,8 @@ import confetti from 'canvas-confetti';
         <div class='stars-holder'>
             {#if allStars}
                 {#each allStars.reverse() as star}
-                    <div class='star-container' class:won={star.won=true}>
-                        {#if star.won=true}
+                    <div class='star-container' class:won={star.won}>
+                        {#if star.won}
                             <div class='trophy'>
                                 🏆
                             </div>
@@ -471,6 +496,10 @@ import confetti from 'canvas-confetti';
 
         .large-trophy {
             font-size: 5rem;
+        }
+
+        .white {
+            color: white;
         }
 
     }
