@@ -13,6 +13,7 @@ import confetti from 'canvas-confetti';
     let loading, isWinner = false;
     let someoneJustWon = [false, null];
     let safeTime: any = 0;
+    let update = 0;
     
     var colors = ["#60c657", "#35aee2"];
 
@@ -188,9 +189,14 @@ import confetti from 'canvas-confetti';
                 await starTxn.wait();
                 console.log('Mined --', starTxn.hash);
 
+                const lastStarred = await starSmartContract.getLastStar();
+                const lastStar = new Date(lastStarred * 1000);
+                safeTime = new Date(lastStar.getTime() + 15*60000);
+
                 count = await starSmartContract.getTotalStars();
                 console.log("Retrieved total star count...", count.toNumber());
                 loading = false;
+                update++;
             }
 
         } catch (error) {
@@ -256,7 +262,7 @@ import confetti from 'canvas-confetti';
                 </button>
             {:else}
                 {#if !loading}
-                    {#key safeTime}
+                    {#key update}
                         {#if safeTime < new Date()}
                             <input class='input' type="text" bind:value={messageText}>
                             <button class="starButton" class:cupo={(messageText.length > 0)} on:click={sendStar} disabled={!(messageText.length > 0)}>
@@ -330,6 +336,8 @@ import confetti from 'canvas-confetti';
 		'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
 		sans-serif;
         font-weight: bold;
+
+        overflow-y: hidden;
     }
 
     main > div > div {
@@ -363,7 +371,7 @@ import confetti from 'canvas-confetti';
         color: black;
         text-align: left;
 
-        width: 100%;
+        width: 90%;
         border-radius: 9px;
     }
 
@@ -392,7 +400,15 @@ import confetti from 'canvas-confetti';
 
     .stars-holder{
         width: 45vw;
+        height: 50vh;
+        overflow-y: scroll;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
     }
+
+    .stars-holder::-webkit-scrollbar {
+            display: none;
+        }
 
     .data-holder {
         width: 100%;
@@ -472,6 +488,7 @@ import confetti from 'canvas-confetti';
 
         .stars-holder{
             width: 80%;
+            overflow-y: scroll;
         }
 
         .data-holder {
@@ -504,6 +521,8 @@ import confetti from 'canvas-confetti';
 
         .white {
             color: white;
+            text-align: center;
+            width: 100%;
         }
 
     }
