@@ -111,7 +111,7 @@ import confetti from 'canvas-confetti';
                 })
 
                 starSmartContract.on('NewWinner', (address) => {
-                    if (currentAccount == address) {
+                    if (currentAccount.trim().toLowerCase() == address.trim().toLowerCase()) {
                         isWinner = true;
                         castConfetti();
                     } else {
@@ -142,6 +142,7 @@ import confetti from 'canvas-confetti';
                 const account = accounts[0];
                 console.log('Found and authorized account: ', account);
                 currentAccount = account;
+                console.log(`*${currentAccount}*`);
                 getAllStars();
                 setupNewStarEventListener();
             } else {
@@ -197,10 +198,12 @@ import confetti from 'canvas-confetti';
                 console.log("Retrieved total star count...", count.toNumber());
                 loading = false;
                 update++;
+                messageText = '';
             }
 
         } catch (error) {
             console.log(error);
+            messageText = '';
         }
     }
 
