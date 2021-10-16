@@ -91,6 +91,7 @@ import confetti from 'canvas-confetti';
                 const starSmartContract = new ethers.Contract(contractAddress, contractABI.abi, signer);
 
                 starSmartContract.on('NewStar', async (from, timestamp, message) => {
+                    console.log('from', from);
                     const stars = await starSmartContract.getAllStars();
                     console.log(stars);
 
@@ -109,7 +110,7 @@ import confetti from 'canvas-confetti';
                 })
 
                 starSmartContract.on('NewWinner', (address) => {
-                    if (signer.getAddress() == address) {
+                    if (currentAccount == address) {
                         isWinner = true;
                         castConfetti();
                     } else {
@@ -299,9 +300,9 @@ import confetti from 'canvas-confetti';
                             <div class='message'>⭐ {star.message}</div>
                             <div class='small-text'>
                                 <div class='address'>
-                                    👤<a href="https://rinkeby.etherscan.io/address/{star.address}">{star.address}</a>
+                                    👤<a href="https://rinkeby.etherscan.io/address/{star.address}"> {star.address}</a>
                                 </div>
-                                <div class='time'>🕒{getShortDate(star.timestamp)}</div>
+                                <div class='time'>🕒 {getShortDate(star.timestamp)}</div>
                             </div>
                         </div>
                     </div>
