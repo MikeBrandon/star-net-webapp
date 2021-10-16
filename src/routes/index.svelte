@@ -3,6 +3,7 @@ import { onMount } from "svelte";
 import { ethers } from "ethers";
 import contractABI from '$lib/utils/StarNet.json';
 import { Jumper } from 'svelte-loading-spinners';
+import type { timestamp } from "$service-worker";
 
     let currentAccount;
     let contractAddress = '0xe85749ac33738fD1E7430763731270B74b17b52A';
@@ -46,6 +47,37 @@ import { Jumper } from 'svelte-loading-spinners';
         }
     }
 
+    async function setupNewStarEventListener() {
+        try {
+            
+            const { ethereum } = window;
+
+            if (ethereum) {
+                const provider = new ethers.providers.Web3Provider(ethereum);
+                const signer = provider.getSigner();
+                const starSmartContract = new ethers.Contract(contractAddress, contractABI.abi, signer);
+
+                starSmartContract.on('NewStar', async (from, timestamp, message) => {
+                    const stars = await starSmartContract.getAllStars();
+
+                    let starsCleaned = [];
+                    stars.forEach(star => {
+                        starsCleaned.push({
+                            address: star.sender,
+                            timestamp: new Date(star.timestamp * 1000),
+                            message: star.message
+                        });
+                    });
+
+                    allStars = [...starsCleaned];
+                })
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     async function checkIfWalletIsConnected() {
         try {
             const { ethereum } = window;
@@ -64,6 +96,7 @@ import { Jumper } from 'svelte-loading-spinners';
                 console.log('Found and authorized account: ', account);
                 currentAccount = account;
                 getAllStars();
+                setupNewStarEventListener();
             } else {
                 console.log('No Authorized Account Found!')
             }
@@ -86,6 +119,7 @@ import { Jumper } from 'svelte-loading-spinners';
             console.log('Connected: ', accounts[0]);
             currentAccount = accounts[0];
             getAllStars();
+            setupNewStarEventListener();
         } catch (error) {
             console.log(error);
         }
@@ -110,7 +144,7 @@ import { Jumper } from 'svelte-loading-spinners';
 
                 count = await starSmartContract.getTotalStars();
                 console.log("Retrieved total star count...", count.toNumber());
-                loading = true;
+                loading = false;
 
             }
 
