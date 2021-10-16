@@ -12,7 +12,7 @@ import confetti from 'canvas-confetti';
     let messageText = '';
     let loading, isWinner = false;
     let someoneJustWon = [false, null];
-    let safeTime = 0;
+    let safeTime: any = 0;
     
     var colors = ["#60c657", "#35aee2"];
 
@@ -190,7 +190,6 @@ import confetti from 'canvas-confetti';
                 count = await starSmartContract.getTotalStars();
                 console.log("Retrieved total star count...", count.toNumber());
                 loading = false;
-
             }
 
         } catch (error) {
@@ -255,16 +254,18 @@ import confetti from 'canvas-confetti';
                     Connect Wallet
                 </button>
             {:else}
-                {#if safeTime < new Date()}
-                    <input class='input' type="text" bind:value={messageText}>
-                    <button class="starButton" class:cupo={(messageText.length > 0)} on:click={sendStar} disabled={!(messageText.length > 0)}>
-                        Send ⭐Star
-                    </button>
-                {:else}
-                    <div>
-                        You Still have to wait for {millisToMinutesAndSeconds(safeTime.getTime() - new Date().getTime())}.
-                    </div>
-                {/if}
+                {#key safeTime}
+                    {#if safeTime < new Date()}
+                        <input class='input' type="text" bind:value={messageText}>
+                        <button class="starButton" class:cupo={(messageText.length > 0)} on:click={sendStar} disabled={!(messageText.length > 0)}>
+                            Send ⭐Star
+                        </button>
+                    {:else}
+                        <div>
+                            You Still have to wait for {millisToMinutesAndSeconds(safeTime.getTime() - new Date().getTime())}.
+                        </div>
+                    {/if}
+                {/key}
             {/if}
         </div>
 
