@@ -3,10 +3,9 @@ import { onMount } from "svelte";
 import { ethers } from "ethers";
 import contractABI from '$lib/utils/StarNet.json';
 import { Jumper } from 'svelte-loading-spinners';
-import type { timestamp } from "$service-worker";
 
     let currentAccount;
-    let contractAddress = '0x904e559Ca36af4131EaF14e2e5E99919B633ca88';
+    let contractAddress = '0x4C92BEBfa0b92d2B6B3EEEB5d6743839F10CF3Cc';
     let count;
     let allStars;
     let messageText = '';
