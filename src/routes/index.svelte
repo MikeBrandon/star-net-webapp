@@ -254,18 +254,20 @@ import confetti from 'canvas-confetti';
                     Connect Wallet
                 </button>
             {:else}
-                {#key safeTime}
-                    {#if safeTime < new Date()}
-                        <input class='input' type="text" bind:value={messageText}>
-                        <button class="starButton" class:cupo={(messageText.length > 0)} on:click={sendStar} disabled={!(messageText.length > 0)}>
-                            Send ⭐Star
-                        </button>
-                    {:else}
-                        <div>
-                            You Still have to wait for {millisToMinutesAndSeconds(safeTime.getTime() - new Date().getTime())}.
-                        </div>
-                    {/if}
-                {/key}
+                {#if !loading}
+                    {#key safeTime}
+                        {#if safeTime < new Date()}
+                            <input class='input' type="text" bind:value={messageText}>
+                            <button class="starButton" class:cupo={(messageText.length > 0)} on:click={sendStar} disabled={!(messageText.length > 0)}>
+                                Send ⭐Star
+                            </button>
+                        {:else}
+                            <div>
+                                You Still have to wait for {millisToMinutesAndSeconds(safeTime.getTime() - new Date().getTime())}.
+                            </div>
+                        {/if}
+                    {/key}
+                {/if}
             {/if}
         </div>
 
