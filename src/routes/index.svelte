@@ -25,17 +25,19 @@ import { Jumper } from 'svelte-loading-spinners';
                 console.log('Total star count... ', count.toNumber());
 
                 const stars = await starSmartContract.getAllStars();
+                console.log(stars);
 
                 let starsCleaned = [];
                 stars.forEach(star => {
                     starsCleaned.push({
                         address: star.sender,
                         timestamp: new Date(star.timestamp * 1000),
-                        message: star.message
+                        message: star.message,
+                        won: star.won
                     });
                 });
 
-                allStars = [...starsCleaned];
+                allStars = [...starsCleaned];   
                 console.log(allStars);
             } else {
                 console.log('Ethereum Object not Found.')
@@ -58,17 +60,24 @@ import { Jumper } from 'svelte-loading-spinners';
 
                 starSmartContract.on('NewStar', async (from, timestamp, message) => {
                     const stars = await starSmartContract.getAllStars();
+                    console.log(stars);
 
                     let starsCleaned = [];
                     stars.forEach(star => {
                         starsCleaned.push({
                             address: star.sender,
                             timestamp: new Date(star.timestamp * 1000),
-                            message: star.message
+                            message: star.message,
+                            won: star.won
                         });
                     });
 
-                    allStars = [...starsCleaned];
+                    allStars = [...starsCleaned];   
+                    console.log(allStars);
+                })
+
+                starSmartContract.on('NewWinner', (address) => {
+                    console.log(address);
                 })
             }
 
@@ -180,7 +189,7 @@ import { Jumper } from 'svelte-loading-spinners';
         </div>
 
         <div class="bio">
-            Leave a message to drop a ⭐Star.
+            Leave a message to drop a ⭐Star for a chance to win 0.0001 ETH.
         </div>
 
         <div>
@@ -214,7 +223,12 @@ import { Jumper } from 'svelte-loading-spinners';
         <div class='stars-holder'>
             {#if allStars}
                 {#each allStars.reverse() as star}
-                    <div class='star-container'>
+                    <div class='star-container' class:won={star.won=true}>
+                        {#if star.won=true}
+                            <div class='trophy'>
+                                🏆
+                            </div>
+                        {/if}
                         <div class='data-holder'>
                             <div class='message'>⭐{star.message}</div>
                             <div class='small-text'>
@@ -310,10 +324,11 @@ import { Jumper } from 'svelte-loading-spinners';
 
     .message {
         font-size: 1.2rem;
+        margin-bottom: 0.25rem;
     }
 
     .stars-holder{
-        width: 50vw;
+        width: 40vw;
     }
 
     .data-holder {
@@ -328,5 +343,23 @@ import { Jumper } from 'svelte-loading-spinners';
 
     .time {
         text-align: right;
+    }
+
+    .won {
+        background-color: goldenrod;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .trophy {
+        transform: translateX(-5px)
+    }
+
+    .dataContainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
 </style>
