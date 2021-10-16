@@ -6,7 +6,7 @@ import { Jumper } from 'svelte-loading-spinners';
 import type { timestamp } from "$service-worker";
 
     let currentAccount;
-    let contractAddress = '0xe85749ac33738fD1E7430763731270B74b17b52A';
+    let contractAddress = '0x904e559Ca36af4131EaF14e2e5E99919B633ca88';
     let count;
     let allStars;
     let messageText = '';
